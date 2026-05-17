@@ -185,9 +185,7 @@ function renderOverview() {
     <main class="page page-overview">
       <section class="hero-panel">
         <div>
-          <span class="eyebrow">V1 visual para apresentacao</span>
           <h1>Monitoramento diario dos pontos criticos do suporte</h1>
-          <p>Uma visao unica, separada por topico, para a equipe acompanhar pendencias e apresentar o fluxo desejado antes das integracoes reais.</p>
         </div>
         <aside class="today-card">
           <span>Status geral</span>
