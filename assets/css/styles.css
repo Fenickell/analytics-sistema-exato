@@ -268,6 +268,20 @@ input {
   white-space: nowrap;
 }
 
+.text-action {
+  border: 0;
+  background: transparent;
+  color: var(--blue-strong);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: underline;
+}
+
+:root[data-theme="dark"] .text-action {
+  color: #8ecbff;
+}
+
 .legend-square {
   display: inline-block;
   width: 16px;
@@ -531,6 +545,16 @@ input {
   color: #ffffff;
 }
 
+.action.success {
+  background: #198754;
+  color: #ffffff;
+}
+
+.action.primary {
+  background: var(--blue-strong);
+  color: #ffffff;
+}
+
 .status-select {
   width: 150px;
   height: 35px;
@@ -553,6 +577,105 @@ input {
 .status-select:focus {
   border-color: var(--blue-strong);
   box-shadow: 0 0 0 3px rgba(8, 120, 209, 0.16);
+}
+
+.empty-state {
+  height: 92px;
+  color: var(--muted);
+  font-weight: 800;
+  text-align: center;
+}
+
+.modal-root:empty {
+  display: none;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(8, 20, 32, 0.55);
+}
+
+.modal-card {
+  width: min(620px, 100%);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.modal-card header,
+.modal-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+.modal-card header {
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-card h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--surface-soft);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.modal-body {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.modal-client {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.modal-textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 1px solid #b9c4cf;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #25313d;
+  outline: none;
+  padding: 10px;
+  line-height: 1.4;
+}
+
+.modal-textarea:focus {
+  border-color: var(--blue-strong);
+  box-shadow: 0 0 0 3px rgba(8, 120, 209, 0.16);
+}
+
+.modal-card footer {
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+}
+
+:root[data-theme="dark"] .modal-textarea {
+  border-color: #6f8395;
+  background: #162636;
+  color: #f2f7fb;
 }
 
 @media (max-width: 1180px) {

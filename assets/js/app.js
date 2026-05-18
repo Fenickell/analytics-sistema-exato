@@ -5,10 +5,10 @@ const pages = {
     tone: "warning",
     source: "PowerBI / integracao futura",
     alerts: [
-      { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", lastBackup: "16/05/2026 23:40", observation: "Verificar rotina no servidor do cliente e confirmar arquivo final." },
-      { client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", lastBackup: "18/05/2026 02:18", observation: "Analista validando se o atraso afetou a integridade do backup." },
-      { client: "FORTALEZA", status: "Pendente", severity: "high", detail: "Aguardando confirmacao do arquivo final.", lastBackup: "17/05/2026 22:56", observation: "Cobrar retorno do cliente e revisar pasta de destino." },
-      { client: "CHAMA PLANTAS", status: "Em revisao", severity: "medium", detail: "Arquivo encontrado, mas ainda sem confirmacao de conclusao.", lastBackup: "18/05/2026 03:12", observation: "Conferir tamanho do arquivo antes de baixar a pendencia." }
+      { id: "backup-afc", client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", lastBackup: "16/05/2026 23:40", observation: "Verificar rotina no servidor do cliente e confirmar arquivo final." },
+      { id: "backup-unifrance", client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", lastBackup: "18/05/2026 02:18", observation: "Analista validando se o atraso afetou a integridade do backup." },
+      { id: "backup-fortaleza", client: "FORTALEZA", status: "Pendente", severity: "high", detail: "Aguardando confirmacao do arquivo final.", lastBackup: "17/05/2026 22:56", observation: "Cobrar retorno do cliente e revisar pasta de destino." },
+      { id: "backup-chama-plantas", client: "CHAMA PLANTAS", status: "Em revisao", severity: "medium", detail: "Arquivo encontrado, mas ainda sem confirmacao de conclusao.", lastBackup: "18/05/2026 03:12", observation: "Conferir tamanho do arquivo antes de baixar a pendencia." }
     ]
   },
   pmlsync: {
@@ -97,6 +97,7 @@ const certificateRows = [
 const pageKey = document.body.dataset.page || "overview";
 const isNested = pageKey !== "overview";
 const basePath = isNested ? "../" : "";
+const backupStorageKey = "analytics-sistema-exato:backup-queue";
 
 function normalizeLink(path) {
   if (path === "./") return basePath || "./";
@@ -107,9 +108,49 @@ function severityLabel(severity) {
   return { high: "Alta", medium: "Media", low: "Baixa" }[severity];
 }
 
-function topicStatus(topic) {
-  const high = topic.alerts.filter((item) => item.severity === "high").length;
-  const medium = topic.alerts.filter((item) => item.severity === "medium").length;
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function statusToSeverity(status) {
+  return status === "Pendente" ? "high" : "medium";
+}
+
+function getBackupQueue() {
+  const savedQueue = localStorage.getItem(backupStorageKey);
+
+  if (!savedQueue) {
+    return structuredClone(pages.backups.alerts);
+  }
+
+  try {
+    return JSON.parse(savedQueue);
+  } catch {
+    return structuredClone(pages.backups.alerts);
+  }
+}
+
+function saveBackupQueue(queue) {
+  localStorage.setItem(backupStorageKey, JSON.stringify(queue));
+}
+
+function resetBackupQueue() {
+  localStorage.removeItem(backupStorageKey);
+}
+
+function getTopicAlerts(key) {
+  if (key === "backups") return getBackupQueue();
+  return pages[key].alerts;
+}
+
+function topicStatus(alerts) {
+  const high = alerts.filter((item) => item.severity === "high").length;
+  const medium = alerts.filter((item) => item.severity === "medium").length;
 
   if (high > 0) return { label: "Atencao critica", className: "danger" };
   if (medium > 0) return { label: "Acompanhar", className: "warning" };
@@ -157,14 +198,16 @@ function renderShell(content) {
         <span class="user-dot" aria-label="Usuario">US</span>
       </header>
       ${content}
+      <div class="modal-root" id="modal-root"></div>
     </div>
   `;
 }
 
 function renderOverview() {
   const rows = Object.entries(pages).map(([key, topic]) => {
-    const status = topicStatus(topic);
-    const pending = topic.alerts.filter((item) => item.severity !== "low").length;
+    const alerts = getTopicAlerts(key);
+    const status = topicStatus(alerts);
+    const pending = alerts.filter((item) => item.severity !== "low").length;
 
     return `
       <tr class="${status.className === "danger" ? "non-business-day" : ""}">
@@ -220,7 +263,6 @@ function renderTopic(topic) {
   if (pageKey === "certificados") return renderCertificatesPage();
   if (pageKey === "backups") return renderBackupsPage(topic);
 
-  const status = topicStatus(topic);
   const rows = topic.alerts.map((item) => `
     <tr>
       <td><strong>${item.client}</strong><small>${item.detail}</small></td>
@@ -263,21 +305,27 @@ function renderTopic(topic) {
 }
 
 function renderBackupsPage(topic) {
-  const rows = topic.alerts.map((item) => `
+  const queue = getBackupQueue();
+  const rows = queue.map((item) => `
     <tr class="${item.severity === "high" ? "non-business-day" : ""}">
-      <td><strong>${item.client}</strong><small>${item.detail}</small></td>
-      <td><span class="status-tag ${item.severity}">${item.status}</span></td>
-      <td>${item.lastBackup}</td>
-      <td>${item.observation}</td>
+      <td><strong>${escapeHtml(item.client)}</strong><small>${escapeHtml(item.detail)}</small></td>
+      <td><span class="status-tag ${item.severity}">${escapeHtml(item.status)}</span></td>
+      <td>${escapeHtml(item.lastBackup)}</td>
+      <td>${escapeHtml(item.observation)}</td>
       <td class="operations backup-operations">
-        <button type="button" class="action secondary">EDITAR OBS.</button>
-        <select class="status-select" aria-label="Alterar status de ${item.client}">
+        <button type="button" class="action secondary" data-action="edit-backup-observation" data-id="${item.id}">EDITAR OBS.</button>
+        <select class="status-select" data-action="change-backup-status" data-id="${item.id}" aria-label="Alterar status de ${escapeHtml(item.client)}">
           <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>
           <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
         </select>
+        <button type="button" class="action success" data-action="complete-backup" data-id="${item.id}">CONCLUIR</button>
       </td>
     </tr>
-  `).join("");
+  `).join("") || `
+    <tr>
+      <td colspan="5" class="empty-state">Nenhum backup pendente para acompanhar.</td>
+    </tr>
+  `;
 
   return renderShell(`
     <main class="content topic-page">
@@ -291,6 +339,7 @@ function renderBackupsPage(topic) {
           <div class="toolbar-summary">
             <span class="legend-square"></span>
             Linha em vermelho: backup pendente critico
+            <button type="button" class="text-action" data-action="reset-backups">RESTAURAR EXEMPLOS</button>
           </div>
         </div>
         <div class="table-card">
@@ -390,6 +439,88 @@ function applyTheme(theme) {
   localStorage.setItem("analytics-theme", theme);
 }
 
+function openBackupObservationModal(id) {
+  const item = getBackupQueue().find((entry) => entry.id === id);
+  if (!item) return;
+
+  document.querySelector("#modal-root").innerHTML = `
+    <div class="modal-backdrop" role="presentation">
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="backup-modal-title">
+        <header>
+          <h2 id="backup-modal-title">Editar observacao</h2>
+          <button type="button" class="modal-close" data-action="close-modal" aria-label="Fechar">X</button>
+        </header>
+        <div class="modal-body">
+          <span class="modal-client">${escapeHtml(item.client)}</span>
+          <textarea class="modal-textarea" id="backup-observation-field">${escapeHtml(item.observation)}</textarea>
+        </div>
+        <footer>
+          <button type="button" class="action muted" data-action="close-modal">CANCELAR</button>
+          <button type="button" class="action primary" data-action="save-backup-observation" data-id="${item.id}">SALVAR</button>
+        </footer>
+      </section>
+    </div>
+  `;
+  document.querySelector("#backup-observation-field").focus();
+}
+
+function closeModal() {
+  document.querySelector("#modal-root").innerHTML = "";
+}
+
+function updateBackupObservation(id) {
+  const field = document.querySelector("#backup-observation-field");
+  const queue = getBackupQueue().map((item) => {
+    if (item.id !== id) return item;
+    return { ...item, observation: field.value.trim() || "Sem observacao registrada" };
+  });
+
+  saveBackupQueue(queue);
+  closeModal();
+  renderApp();
+}
+
+function changeBackupStatus(id, status) {
+  const queue = getBackupQueue().map((item) => {
+    if (item.id !== id) return item;
+    return { ...item, status, severity: statusToSeverity(status) };
+  });
+
+  saveBackupQueue(queue);
+  renderApp();
+}
+
+function completeBackup(id) {
+  const queue = getBackupQueue().filter((item) => item.id !== id);
+  saveBackupQueue(queue);
+  renderApp();
+}
+
+function bootInteractions() {
+  document.addEventListener("click", (event) => {
+    const target = event.target.closest("[data-action]");
+    if (!target) return;
+
+    const action = target.dataset.action;
+    const id = target.dataset.id;
+
+    if (action === "edit-backup-observation") openBackupObservationModal(id);
+    if (action === "close-modal") closeModal();
+    if (action === "save-backup-observation") updateBackupObservation(id);
+    if (action === "complete-backup") completeBackup(id);
+    if (action === "reset-backups") {
+      resetBackupQueue();
+      renderApp();
+    }
+  });
+
+  document.addEventListener("change", (event) => {
+    if (event.target.dataset.action === "change-backup-status") {
+      changeBackupStatus(event.target.dataset.id, event.target.value);
+    }
+  });
+}
+
 function bootThemeToggle() {
   const savedTheme = localStorage.getItem("analytics-theme") || "light";
   applyTheme(savedTheme);
@@ -401,5 +532,11 @@ function bootThemeToggle() {
 }
 
 const app = document.querySelector("#app");
-app.innerHTML = pageKey === "overview" ? renderOverview() : renderTopic(pages[pageKey]);
-bootThemeToggle();
+
+function renderApp() {
+  app.innerHTML = pageKey === "overview" ? renderOverview() : renderTopic(pages[pageKey]);
+  bootThemeToggle();
+}
+
+renderApp();
+bootInteractions();
