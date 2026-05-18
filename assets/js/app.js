@@ -268,7 +268,9 @@ function renderBackupsPage(topic) {
       <td><strong>${item.client}</strong><small>${item.detail}</small></td>
       <td><span class="status-tag ${item.severity}">${item.status}</span></td>
       <td>${item.lastBackup}</td>
-      <td>${item.observation}</td>
+      <td>
+        <textarea class="observation-input" aria-label="Observacao de ${item.client}">${item.observation}</textarea>
+      </td>
       <td>
         <select class="status-select" aria-label="Alterar status de ${item.client}">
           <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>

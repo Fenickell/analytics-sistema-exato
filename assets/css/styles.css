@@ -550,6 +550,32 @@ input {
   color: #f2f7fb;
 }
 
+.observation-input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  resize: vertical;
+  border: 1px solid #b9c4cf;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #25313d;
+  outline: none;
+  padding: 8px 10px;
+  line-height: 1.35;
+}
+
+.observation-input:focus,
+.status-select:focus {
+  border-color: var(--blue-strong);
+  box-shadow: 0 0 0 3px rgba(8, 120, 209, 0.16);
+}
+
+:root[data-theme="dark"] .observation-input {
+  border-color: #6f8395;
+  background: #162636;
+  color: #f2f7fb;
+}
+
 @media (max-width: 1180px) {
   .app-shell {
     padding-left: 0;
