@@ -502,14 +502,15 @@ input {
 .certificate-table th:nth-child(9) { width: 210px; }
 
 .backup-table {
-  min-width: 1280px;
+  min-width: 1450px;
 }
 
-.backup-table th:nth-child(1) { width: 320px; }
-.backup-table th:nth-child(2) { width: 180px; }
-.backup-table th:nth-child(3) { width: 220px; }
-.backup-table th:nth-child(4) { width: 390px; }
-.backup-table th:nth-child(5) { width: 260px; }
+.backup-table th:nth-child(1) { width: 300px; }
+.backup-table th:nth-child(2) { width: 220px; }
+.backup-table th:nth-child(3) { width: 210px; }
+.backup-table th:nth-child(4) { width: 140px; }
+.backup-table th:nth-child(5) { width: 340px; }
+.backup-table th:nth-child(6) { width: 240px; }
 
 .non-business-day td {
   background: var(--danger-soft);
@@ -624,7 +625,7 @@ input {
 }
 
 .status-select {
-  width: 146px;
+  width: 190px;
   height: 34px;
   border: 1px solid #b9c4cf;
   border-radius: var(--radius-sm);

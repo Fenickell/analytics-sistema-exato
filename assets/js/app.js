@@ -5,10 +5,10 @@ const pages = {
     tone: "warning",
     source: "PowerBI / integracao futura",
     alerts: [
-      { id: "backup-afc", client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", lastBackup: "16/05/2026 23:40", observation: "Verificar rotina no servidor do cliente e confirmar arquivo final." },
-      { id: "backup-unifrance", client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", lastBackup: "18/05/2026 02:18", observation: "Analista validando se o atraso afetou a integridade do backup." },
-      { id: "backup-fortaleza", client: "FORTALEZA", status: "Pendente", severity: "high", detail: "Aguardando confirmacao do arquivo final.", lastBackup: "17/05/2026 22:56", observation: "Cobrar retorno do cliente e revisar pasta de destino." },
-      { id: "backup-chama-plantas", client: "CHAMA PLANTAS", status: "Em revisao", severity: "medium", detail: "Arquivo encontrado, mas ainda sem confirmacao de conclusao.", lastBackup: "18/05/2026 03:12", observation: "Conferir tamanho do arquivo antes de baixar a pendencia." }
+      { id: "backup-afc", client: "AFC AUTOMATICOS", status: "Falha nao solucionada", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", lastBackup: "16/05/2026 23:40", daysWithoutBackup: 2, observation: "Verificar rotina no servidor do cliente e confirmar arquivo final." },
+      { id: "backup-unifrance", client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", lastBackup: "18/05/2026 02:18", daysWithoutBackup: 0, observation: "Analista validando se o atraso afetou a integridade do backup." },
+      { id: "backup-fortaleza", client: "FORTALEZA", status: "Falha nao solucionada", severity: "high", detail: "Aguardando confirmacao do arquivo final.", lastBackup: "13/05/2026 11:59", daysWithoutBackup: 4, observation: "Cobrar retorno do cliente e revisar pasta de destino." },
+      { id: "backup-chama-plantas", client: "CHAMA PLANTAS", status: "Em revisao", severity: "medium", detail: "Arquivo encontrado, mas ainda sem confirmacao de conclusao.", lastBackup: "18/05/2026 03:12", daysWithoutBackup: 0, observation: "Conferir tamanho do arquivo antes de baixar a pendencia." }
     ]
   },
   pmlsync: {
@@ -118,20 +118,39 @@ function escapeHtml(value) {
 }
 
 function statusToSeverity(status) {
-  return status === "Pendente" ? "high" : "medium";
+  return status === "Falha nao solucionada" ? "high" : "medium";
 }
 
 function getBackupQueue() {
   const savedQueue = localStorage.getItem(backupStorageKey);
+  const defaultQueue = structuredClone(pages.backups.alerts);
 
   if (!savedQueue) {
-    return structuredClone(pages.backups.alerts);
+    return defaultQueue;
   }
 
   try {
-    return JSON.parse(savedQueue);
+    const saved = JSON.parse(savedQueue);
+    const migrated = saved.map((item) => {
+      const fallback = defaultQueue.find((entry) => entry.id === item.id) || {};
+      const status = item.status === "Pendente" ? "Falha nao solucionada" : item.status;
+      const daysWithoutBackup = Number.isFinite(item.daysWithoutBackup)
+        ? item.daysWithoutBackup
+        : fallback.daysWithoutBackup || 0;
+
+      return {
+        ...fallback,
+        ...item,
+        status,
+        daysWithoutBackup,
+        severity: statusToSeverity(status)
+      };
+    });
+
+    saveBackupQueue(migrated);
+    return migrated;
   } catch {
-    return structuredClone(pages.backups.alerts);
+    return defaultQueue;
   }
 }
 
@@ -307,15 +326,16 @@ function renderTopic(topic) {
 function renderBackupsPage(topic) {
   const queue = getBackupQueue();
   const rows = queue.map((item) => `
-    <tr class="${item.severity === "high" ? "non-business-day" : ""}">
+    <tr class="${item.daysWithoutBackup > 1 ? "non-business-day" : ""}">
       <td><strong>${escapeHtml(item.client)}</strong><small>${escapeHtml(item.detail)}</small></td>
       <td>
         <select class="status-select status-select-${item.severity}" data-action="change-backup-status" data-id="${item.id}" aria-label="Alterar status de ${escapeHtml(item.client)}">
-          <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>
+          <option ${item.status === "Falha nao solucionada" ? "selected" : ""}>Falha nao solucionada</option>
           <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
         </select>
       </td>
       <td>${escapeHtml(item.lastBackup)}</td>
+      <td>${escapeHtml(item.daysWithoutBackup)}</td>
       <td>${escapeHtml(item.observation)}</td>
       <td class="operations backup-operations">
         <button type="button" class="action secondary" data-action="edit-backup-observation" data-id="${item.id}">EDITAR OBS.</button>
@@ -324,7 +344,7 @@ function renderBackupsPage(topic) {
     </tr>
   `).join("") || `
     <tr>
-      <td colspan="5" class="empty-state">Nenhum backup pendente para acompanhar.</td>
+      <td colspan="6" class="empty-state">Nenhum backup pendente para acompanhar.</td>
     </tr>
   `;
 
@@ -339,7 +359,7 @@ function renderBackupsPage(topic) {
           </label>
           <div class="toolbar-summary">
             <span class="legend-square"></span>
-            Linha em vermelho: backup pendente critico
+            Linha em vermelho: cliente com mais de 1 dia sem backup
             <button type="button" class="text-action" data-action="reset-backups">RESTAURAR EXEMPLOS</button>
           </div>
         </div>
@@ -352,6 +372,7 @@ function renderBackupsPage(topic) {
                   <th>Cliente</th>
                   <th>Status</th>
                   <th>Data do ultimo backup feito</th>
+                  <th>Dias sem Backup</th>
                   <th>Observacao</th>
                   <th>Operacoes</th>
                 </tr>
