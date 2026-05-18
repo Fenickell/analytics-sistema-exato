@@ -268,10 +268,9 @@ function renderBackupsPage(topic) {
       <td><strong>${item.client}</strong><small>${item.detail}</small></td>
       <td><span class="status-tag ${item.severity}">${item.status}</span></td>
       <td>${item.lastBackup}</td>
-      <td>
-        <textarea class="observation-input" aria-label="Observacao de ${item.client}">${item.observation}</textarea>
-      </td>
-      <td>
+      <td>${item.observation}</td>
+      <td class="operations backup-operations">
+        <button type="button" class="action secondary">EDITAR OBS.</button>
         <select class="status-select" aria-label="Alterar status de ${item.client}">
           <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>
           <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
@@ -304,7 +303,7 @@ function renderBackupsPage(topic) {
                   <th>Status</th>
                   <th>Data do ultimo backup feito</th>
                   <th>Observacao</th>
-                  <th>Alterar status</th>
+                  <th>Operacoes</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
