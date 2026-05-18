@@ -1,36 +1,21 @@
 const pages = {
   backups: {
-    eyebrow: "Controle diario",
     title: "Backups de clientes",
     description: "Acompanhamento de clientes com backup concluido, pendente ou exigindo revisao.",
     tone: "warning",
-    source: "Origem prevista: PowerBI / integracao futura",
-    metrics: [
-      { label: "Clientes monitorados", value: "24", detail: "base ativa" },
-      { label: "Backups OK", value: "19", detail: "sem acao" },
-      { label: "Pendentes", value: "4", detail: "acompanhar hoje" },
-      { label: "Criticos", value: "1", detail: "prioridade alta" }
-    ],
+    source: "PowerBI / integracao futura",
     alerts: [
       { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", time: "08:12" },
       { client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", time: "08:37" },
       { client: "REAL PARIS", status: "OK", severity: "low", detail: "Ultimo backup confirmado com sucesso.", time: "07:55" },
-      { client: "FORTALEZA", status: "Pendente", severity: "medium", detail: "Aguardando confirmacao do arquivo final.", time: "09:04" },
-      { client: "GESAN", status: "OK", severity: "low", detail: "Rotina concluida dentro do horario.", time: "07:42" }
+      { client: "FORTALEZA", status: "Pendente", severity: "medium", detail: "Aguardando confirmacao do arquivo final.", time: "09:04" }
     ]
   },
   pmlsync: {
-    eyebrow: "Sincronizador",
     title: "PmlSync",
     description: "Visao diaria dos sincronizadores que precisam rodar sem interrupcao nos clientes.",
     tone: "success",
-    source: "Origem prevista: alerta de e-mail Outlook",
-    metrics: [
-      { label: "Clientes observados", value: "18", detail: "com rotina ativa" },
-      { label: "Rodaram hoje", value: "16", detail: "confirmados" },
-      { label: "Sem execucao", value: "1", detail: "acionar cliente" },
-      { label: "Aguardando leitura", value: "1", detail: "validar alerta" }
-    ],
+    source: "Alerta de e-mail Outlook",
     alerts: [
       { client: "CHAMA PLANTAS", status: "Sem execucao", severity: "high", detail: "Alerta recebido indicando que o sincronizador nao rodou hoje.", time: "08:21" },
       { client: "AFC AUTOMATICOS", status: "OK", severity: "low", detail: "Sincronizacao diaria confirmada.", time: "07:50" },
@@ -39,17 +24,10 @@ const pages = {
     ]
   },
   "mercado-livre": {
-    eyebrow: "Integracao",
     title: "Mercado Livre",
-    description: "Monitoramento de falhas de integracao com pedidos, anuncios ou comunicacao com marketplace.",
+    description: "Monitoramento de falhas de integracao com pedidos, anuncios ou marketplace.",
     tone: "danger",
-    source: "Origem prevista: alerta de e-mail Outlook",
-    metrics: [
-      { label: "Integracoes ativas", value: "12", detail: "clientes" },
-      { label: "Sem falhas", value: "9", detail: "operacao normal" },
-      { label: "Falhas abertas", value: "3", detail: "tratar hoje" },
-      { label: "Impacto alto", value: "1", detail: "prioridade" }
-    ],
+    source: "Alerta de e-mail Outlook",
     alerts: [
       { client: "REAL PARIS", status: "Falha critica", severity: "high", detail: "Erro de comunicacao com Mercado Livre em pedidos recentes.", time: "08:45" },
       { client: "FORTALEZA", status: "Falha", severity: "medium", detail: "Integracao instavel e aguardando nova tentativa.", time: "09:02" },
@@ -58,17 +36,10 @@ const pages = {
     ]
   },
   transferencias: {
-    eyebrow: "Operacao",
     title: "Transferencias pendentes",
-    description: "Fila de transferencias que precisam ser identificadas, cobradas ou acompanhadas pela equipe.",
+    description: "Fila de transferencias que precisam ser acompanhadas pela equipe.",
     tone: "warning",
-    source: "Origem prevista: alerta de e-mail Outlook",
-    metrics: [
-      { label: "Pendencias do dia", value: "7", detail: "total" },
-      { label: "Clientes afetados", value: "5", detail: "na fila" },
-      { label: "Prioridade alta", value: "2", detail: "acao imediata" },
-      { label: "Resolvidas", value: "4", detail: "simulado" }
-    ],
+    source: "Alerta de e-mail Outlook",
     alerts: [
       { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Transferencia aguardando validacao desde o inicio da manha.", time: "08:06" },
       { client: "FORTALEZA", status: "Pendente", severity: "high", detail: "Cliente com transferencia parada e impacto operacional.", time: "08:52" },
@@ -77,34 +48,50 @@ const pages = {
     ]
   },
   certificados: {
-    eyebrow: "Vencimentos",
-    title: "Certificados digitais",
-    description: "Visao de certificados proximos ao vencimento, com destaque para dias nao uteis.",
+    title: "Certificados Digitais",
+    description: "Lista de certificados proximos ao vencimento.",
     tone: "danger",
-    source: "Origem prevista: dashboard interno / integracao futura",
-    metrics: [
-      { label: "Proximos 30 dias", value: "14", detail: "certificados" },
-      { label: "Vencem em ate 7 dias", value: "5", detail: "urgentes" },
-      { label: "Dia nao util", value: "3", detail: "sabado, domingo ou feriado" },
-      { label: "Clientes avisados", value: "8", detail: "simulado" }
-    ],
-    alerts: [
-      { client: "GESAN", status: "Vence em domingo", severity: "high", detail: "Vencimento simulado em dia nao util. Antecipar contato.", time: "10/06" },
-      { client: "REAL PARIS", status: "Vence em 4 dias", severity: "high", detail: "Cliente precisa confirmar renovacao.", time: "20/05" },
-      { client: "AFC AUTOMATICOS", status: "Vence em sabado", severity: "medium", detail: "Recomendado antecipar agenda.", time: "30/05" },
-      { client: "UNIFRANCE", status: "Avisado", severity: "low", detail: "Contato registrado no acompanhamento.", time: "28/05" },
-      { client: "CHAMA PLANTAS", status: "Monitorar", severity: "medium", detail: "Vencimento proximo com retorno pendente.", time: "05/06" }
-    ]
+    source: "Dashboard interno / integracao futura",
+    alerts: []
   }
 };
 
-const navItems = [
-  ["overview", "Visao geral", "./"],
-  ["backups", "Backups", "backups/"],
-  ["pmlsync", "PmlSync", "pmlsync/"],
-  ["mercado-livre", "Mercado Livre", "mercado-livre/"],
-  ["transferencias", "Transferencias", "transferencias/"],
-  ["certificados", "Certificados", "certificados/"]
+const sidebarSections = [
+  { label: "Admin", icon: "ADM", items: [] },
+  { label: "Servidores", icon: "SRV", items: [] },
+  {
+    label: "Exato",
+    icon: "EX",
+    items: [
+      ["certificados", "Certificados Digitais", "certificados/"],
+      ["overview", "Painel Analytics", "./"],
+      ["backups", "Backups de clientes", "backups/"],
+      ["pmlsync", "PmlSync", "pmlsync/"],
+      ["mercado-livre", "Mercado Livre", "mercado-livre/"],
+      ["transferencias", "Transferencias", "transferencias/"]
+    ]
+  },
+  { label: "Aplicativo", icon: "APP", items: [] },
+  { label: "Controle de Acessos", icon: "ACC", items: [] },
+  { label: "Graficos", icon: "GRA", items: [] },
+  { label: "Api Exato Core", icon: "API", items: [] },
+  { label: "Cadastro de Versao", icon: "CAD", items: [] },
+  { label: "Controle de Versao", icon: "VER", items: [] },
+  { label: "Tutoriais", icon: "TUT", items: [] },
+  { label: "Gerenciamento de Versoes", icon: "GER", items: [] }
+];
+
+const certificateRows = [
+  { cnpj: "50688150000108", razao: "GRUPO RP PECAS AUT...", fantasia: "GRUPO RP", serial: "790A18529ABEACBBAE4C...", identificador: "59d4651c-dbbe-494e-a4e5-99abbf187efa", tipo: "A1", vencimento: "19/05/2026", observacao: "Avisado Freud - Chamado ...", nonBusinessDay: false },
+  { cnpj: "13705764000124", razao: "W IMPORTS COMERCIO...", fantasia: "W IMPORTS", serial: "6B68250519594578", identificador: "74c77c97-56af-46a0-8079-b8f3408cd23f", tipo: "A1", vencimento: "19/05/2026", observacao: "Avisado Rose - Chamado 3...", nonBusinessDay: false },
+  { cnpj: "18456234000103", razao: "FW COM DE MAT ELET ...", fantasia: "Conskit Casa e Constru...", serial: "3D07C7FD1B3BD509", identificador: "9c6b97ff-edcc-44c8-9628-bc133393b9f1", tipo: "A1", vencimento: "19/05/2026", observacao: "Avisado Fabio - Chamado 3...", nonBusinessDay: false },
+  { cnpj: "60826721000187", razao: "MOUSTACHE S PARTS L...", fantasia: "MOUSTACHE S PARTS", serial: "626525052152633C", identificador: "336445e0-4cfb-4663-a5db-1cbdfe002489", tipo: "A1", vencimento: "21/05/2026", observacao: "Avisado Bianca - Chamado ...", nonBusinessDay: false },
+  { cnpj: "22085289000121", razao: "ALEXANDRE MULTIMA...", fantasia: "ALEXANDRE MULTIMA...", serial: "70BDF0D92A7FBF3F", identificador: "5787705c-544f-4bdb-8223-49b33926a4b7", tipo: "A1", vencimento: "22/05/2026", observacao: "Avisado Alexandre - Chama...", nonBusinessDay: false },
+  { cnpj: "68468750000126", razao: "Plano Espaco Forro & D...", fantasia: "Plano Espaco Forro & D...", serial: "45869689CEEE92AE5AD9...", identificador: "d8583c65-c0d7-4d81-8382-7c506648e46a", tipo: "A1", vencimento: "22/05/2026", observacao: "Avisado Roseli - Chamado ...", nonBusinessDay: false },
+  { cnpj: "30393265000168", razao: "YID ITAQUERA COMERC...", fantasia: "UNIDADE SHOPPING IT...", serial: "0211DF084F9261DA09103...", identificador: "122c50ce-79c5-48ae-9836-53bf5ea3108f", tipo: "A1", vencimento: "24/05/2026", observacao: "Avisado Marcos - Chamado...", nonBusinessDay: true },
+  { cnpj: "50973810000100", razao: "PLANETA LUA COMERC...", fantasia: "PLANETA LUA", serial: "542225052334354C", identificador: "122c50ce-79c5-48ae-9836-53bf5ea3108f", tipo: "A1", vencimento: "26/05/2026", observacao: "Aguardando contato", nonBusinessDay: false },
+  { cnpj: "12911220000156", razao: "MARCIO ANTONIO ALV...", fantasia: "MTL AUTO PECAS", serial: "00A271E126837184C94DEA", identificador: "122c50ce-79c5-48ae-9836-53bf5ea3108f", tipo: "A1", vencimento: "28/05/2026", observacao: "Avisado por e-mail", nonBusinessDay: false },
+  { cnpj: "60290752000166", razao: "NSA COMERCIAL LTDA", fantasia: "NSA COMERCIAL SP", serial: "4E292505285850F6", identificador: "74c77c97-56af-46a0-8079-b8f3408cd23f", tipo: "A1", vencimento: "28/05/2026", observacao: "Sem retorno do cliente", nonBusinessDay: false }
 ];
 
 const pageKey = document.body.dataset.page || "overview";
@@ -117,11 +104,7 @@ function normalizeLink(path) {
 }
 
 function severityLabel(severity) {
-  return {
-    high: "Alta",
-    medium: "Media",
-    low: "Baixa"
-  }[severity];
+  return { high: "Alta", medium: "Media", low: "Baixa" }[severity];
 }
 
 function topicStatus(topic) {
@@ -133,28 +116,45 @@ function topicStatus(topic) {
   return { label: "Operacao normal", className: "success" };
 }
 
-function renderShell(content) {
-  const nav = navItems.map(([key, label, path]) => {
-    const active = key === pageKey ? "active" : "";
-    return `<a class="${active}" href="${normalizeLink(path)}">${label}</a>`;
-  }).join("");
+function renderSidebar() {
+  return sidebarSections.map((section) => {
+    const items = section.items.map(([key, label, path]) => {
+      const active = key === pageKey ? "active" : "";
+      const href = normalizeLink(path);
 
+      return `
+        <div class="sidebar-subitem ${active}">
+          <a href="${href}">${label}</a>
+          <a class="open-new" href="${href}" target="_blank" rel="noopener" title="Abrir em nova janela">Abrir</a>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="sidebar-section">
+        <div class="sidebar-item">
+          <span class="sidebar-icon">${section.icon}</span>
+          <span>${section.label}</span>
+        </div>
+        ${items}
+      </div>
+    `;
+  }).join("");
+}
+
+function renderShell(content) {
   return `
     <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="${normalizeLink("./")}" aria-label="Analytics Sistema Exato">
-          <span class="brand-logo">
-            <img src="${basePath}assets/images/pml-logo.jpg" alt="PML">
-          </span>
-          <span>
-            <strong>Analytics Sistema Exato</strong>
-            <small>Painel diario de suporte</small>
-          </span>
-        </a>
-        <nav class="nav" aria-label="Navegacao principal">${nav}</nav>
-        <button class="theme-toggle" type="button" aria-label="Alternar modo escuro" title="Alternar modo escuro">
-          <span class="theme-icon">◐</span>
-        </button>
+      <aside class="sidebar" aria-label="Navegacao lateral">
+        <div class="sidebar-head">
+          <a class="panel-title" href="${normalizeLink("./")}">Painel</a>
+          <button class="sidebar-back" type="button" title="Voltar">Voltar</button>
+        </div>
+        ${renderSidebar()}
+      </aside>
+      <header class="system-bar">
+        <button class="theme-toggle" type="button" aria-label="Alternar modo escuro" title="Alternar modo escuro">Tema</button>
+        <span class="user-dot" aria-label="Usuario">US</span>
       </header>
       ${content}
     </div>
@@ -162,58 +162,67 @@ function renderShell(content) {
 }
 
 function renderOverview() {
-  const cards = Object.entries(pages).map(([key, topic]) => {
+  const rows = Object.entries(pages).map(([key, topic]) => {
     const status = topicStatus(topic);
     const pending = topic.alerts.filter((item) => item.severity !== "low").length;
 
     return `
-      <a class="overview-card ${topic.tone}" href="${normalizeLink(`${key}/`)}">
-        <div>
-          <span class="pill ${status.className}">${status.label}</span>
-          <h2>${topic.title}</h2>
-          <p>${topic.description}</p>
-        </div>
-        <footer>
-          <strong>${pending}</strong>
-          <span>pontos para acompanhar</span>
-        </footer>
-      </a>
+      <tr class="${status.className === "danger" ? "non-business-day" : ""}">
+        <td><strong>${topic.title}</strong><small>${topic.description}</small></td>
+        <td><span class="status-tag ${status.className}">${status.label}</span></td>
+        <td>${pending}</td>
+        <td>${topic.source}</td>
+        <td class="actions-cell">
+          <a class="action secondary" href="${normalizeLink(`${key}/`)}">ABRIR</a>
+          <a class="action muted" href="${normalizeLink(`${key}/`)}" target="_blank" rel="noopener">NOVA JANELA</a>
+        </td>
+      </tr>
     `;
   }).join("");
 
   return renderShell(`
-    <main class="page page-overview">
-      <section class="hero-panel">
-        <div>
-          <h1>Monitoramento diario dos pontos criticos do suporte</h1>
+    <main class="content page-overview">
+      <section class="admin-page">
+        <div class="breadcrumb">Exato -> Analytics Sistema Exato -> Lista</div>
+        <div class="list-toolbar">
+          <label class="search-field">
+            <span>Topico, cliente ou status</span>
+            <input type="search" placeholder="Buscar..">
+          </label>
+          <div class="toolbar-summary">
+            <span class="legend-square"></span>
+            Linha em vermelho: item critico para acompanhamento
+          </div>
         </div>
-        <aside class="today-card">
-          <span>Status geral</span>
-          <strong>Acompanhar</strong>
-          <small>Dados demonstrativos</small>
-        </aside>
+        <div class="table-card">
+          <div class="table-accent"></div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Topico</th>
+                  <th>Status</th>
+                  <th>Pendencias</th>
+                  <th>Origem</th>
+                  <th>Operacoes</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>
       </section>
-      <section class="overview-grid" aria-label="Topicos monitorados">${cards}</section>
     </main>
   `);
 }
 
 function renderTopic(topic) {
-  const status = topicStatus(topic);
-  const metrics = topic.metrics.map((metric) => `
-    <article class="metric-card">
-      <span>${metric.label}</span>
-      <strong>${metric.value}</strong>
-      <small>${metric.detail}</small>
-    </article>
-  `).join("");
+  if (pageKey === "certificados") return renderCertificatesPage();
 
+  const status = topicStatus(topic);
   const rows = topic.alerts.map((item) => `
     <tr>
-      <td>
-        <strong>${item.client}</strong>
-        <small>${item.detail}</small>
-      </td>
+      <td><strong>${item.client}</strong><small>${item.detail}</small></td>
       <td><span class="status-tag ${item.severity}">${item.status}</span></td>
       <td>${severityLabel(item.severity)}</td>
       <td>${item.time}</td>
@@ -221,42 +230,101 @@ function renderTopic(topic) {
   `).join("");
 
   return renderShell(`
-    <main class="page topic-page ${topic.tone}">
-      <section class="topic-hero">
-        <div>
-          <span class="eyebrow">${topic.eyebrow}</span>
-          <h1>${topic.title}</h1>
-          <p>${topic.description}</p>
+    <main class="content topic-page ${topic.tone}">
+      <section class="admin-page">
+        <div class="breadcrumb">Exato -> ${topic.title} -> Lista</div>
+        <div class="list-toolbar">
+          <label class="search-field">
+            <span>Cliente, status ou observacao</span>
+            <input type="search" placeholder="Buscar..">
+          </label>
+          <div class="toolbar-summary">${topic.source}</div>
         </div>
-        <aside class="status-panel ${status.className}">
-          <span>Status do topico</span>
-          <strong>${status.label}</strong>
-          <small>${topic.source}</small>
-        </aside>
-      </section>
-
-      <section class="metric-grid" aria-label="Indicadores">${metrics}</section>
-
-      <section class="work-panel">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Fila de acompanhamento</span>
-            <h2>Clientes e eventos de exemplo</h2>
+        <div class="table-card">
+          <div class="table-accent"></div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Status</th>
+                  <th>Prioridade</th>
+                  <th>Referencia</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
           </div>
-          <span class="updated">Atualizado hoje, 09:45</span>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Prioridade</th>
-                <th>Referencia</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
+      </section>
+    </main>
+  `);
+}
+
+function renderCertificatesPage() {
+  const rows = certificateRows.map((row) => `
+    <tr class="${row.nonBusinessDay ? "non-business-day" : ""}">
+      <td>${row.cnpj}</td>
+      <td>${row.razao}</td>
+      <td>${row.fantasia}</td>
+      <td>${row.serial}</td>
+      <td>${row.identificador}</td>
+      <td>${row.tipo}</td>
+      <td>${row.vencimento}</td>
+      <td>${row.observacao}</td>
+      <td class="operations">
+        <button type="button" class="action secondary">EDITAR OBS.</button>
+        <button type="button" class="action danger">DELETAR</button>
+      </td>
+    </tr>
+  `).join("");
+
+  return renderShell(`
+    <main class="content certificates-page">
+      <section class="admin-page">
+        <div class="breadcrumb">Exato -> Certificados Digitais -> Lista</div>
+        <div class="cert-toolbar">
+          <label class="search-field wide">
+            <span>CNPJ, Razao Social e Nome Fantasia</span>
+            <input type="search" placeholder="Buscar..">
+          </label>
+          <div class="legend-note">
+            <span class="legend-square"></span>
+            Linha em vermelho: certificado com vencimento em dia nao util
+          </div>
+          <fieldset class="period-box">
+            <legend>Periodo Data de Vencimento:</legend>
+            <label>
+              <span>De:</span>
+              <input type="text" value="18/05/2026">
+            </label>
+            <label>
+              <span>Ate:</span>
+              <input type="text" placeholder="Ate:">
+            </label>
+            <button type="button" class="search-button">PESQUISAR</button>
+          </fieldset>
+        </div>
+        <div class="table-card certificate-table-card">
+          <div class="table-accent"></div>
+          <div class="table-wrap">
+            <table class="admin-table certificate-table">
+              <thead>
+                <tr>
+                  <th>CNPJ</th>
+                  <th>Razao Social</th>
+                  <th>Nome Fantasia</th>
+                  <th>Serial Certificado</th>
+                  <th>Identificador Uninfe Exato</th>
+                  <th>Tipo Cert</th>
+                  <th>Dt Vencimento</th>
+                  <th>Observacao</th>
+                  <th>Operacoes</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
         </div>
       </section>
     </main>
