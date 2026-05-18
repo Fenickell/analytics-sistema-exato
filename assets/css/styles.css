@@ -378,6 +378,23 @@ input {
   color: var(--text);
 }
 
+:root[data-theme="dark"] .admin-table th {
+  background: #233444;
+  border-right-color: #31485b;
+  color: #f2f7fb;
+}
+
+:root[data-theme="dark"] .search-field,
+:root[data-theme="dark"] .toolbar-summary,
+:root[data-theme="dark"] .legend-note,
+:root[data-theme="dark"] .breadcrumb {
+  color: #c4d1dd;
+}
+
+:root[data-theme="dark"] .search-field input {
+  border-bottom-color: #6f8395;
+}
+
 .admin-table td {
   height: 51px;
   font-size: 14px;
