@@ -5,10 +5,11 @@ const pages = {
     tone: "warning",
     source: "PowerBI / integracao futura",
     alerts: [
-      { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", time: "08:12" },
-      { client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", time: "08:37" },
-      { client: "REAL PARIS", status: "OK", severity: "low", detail: "Ultimo backup confirmado com sucesso.", time: "07:55" },
-      { client: "FORTALEZA", status: "Pendente", severity: "medium", detail: "Aguardando confirmacao do arquivo final.", time: "09:04" }
+      { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", time: "08:12", lastBackup: "16/05/2026 23:40" },
+      { client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", time: "08:37", lastBackup: "18/05/2026 02:18" },
+      { client: "REAL PARIS", status: "OK", severity: "low", detail: "Ultimo backup confirmado com sucesso.", time: "07:55", lastBackup: "18/05/2026 01:05" },
+      { client: "FORTALEZA", status: "Pendente", severity: "medium", detail: "Aguardando confirmacao do arquivo final.", time: "09:04", lastBackup: "17/05/2026 22:56" },
+      { client: "GESAN", status: "OK", severity: "low", detail: "Rotina concluida dentro do horario.", time: "07:42", lastBackup: "18/05/2026 00:42" }
     ]
   },
   pmlsync: {
@@ -218,6 +219,7 @@ function renderOverview() {
 
 function renderTopic(topic) {
   if (pageKey === "certificados") return renderCertificatesPage();
+  if (pageKey === "backups") return renderBackupsPage(topic);
 
   const status = topicStatus(topic);
   const rows = topic.alerts.map((item) => `
@@ -248,6 +250,53 @@ function renderTopic(topic) {
                 <tr>
                   <th>Cliente</th>
                   <th>Status</th>
+                  <th>Prioridade</th>
+                  <th>Referencia</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  `);
+}
+
+function renderBackupsPage(topic) {
+  const rows = topic.alerts.map((item) => `
+    <tr class="${item.severity === "high" ? "non-business-day" : ""}">
+      <td><strong>${item.client}</strong><small>${item.detail}</small></td>
+      <td><span class="status-tag ${item.severity}">${item.status}</span></td>
+      <td>${item.lastBackup}</td>
+      <td>${severityLabel(item.severity)}</td>
+      <td>${item.time}</td>
+    </tr>
+  `).join("");
+
+  return renderShell(`
+    <main class="content topic-page">
+      <section class="admin-page">
+        <div class="breadcrumb">Exato -> Backups de clientes -> Lista</div>
+        <div class="list-toolbar">
+          <label class="search-field">
+            <span>Cliente, status ou observacao</span>
+            <input type="search" placeholder="Buscar..">
+          </label>
+          <div class="toolbar-summary">
+            <span class="legend-square"></span>
+            Linha em vermelho: backup pendente critico
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-accent"></div>
+          <div class="table-wrap">
+            <table class="admin-table backup-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Status</th>
+                  <th>Data do ultimo backup feito</th>
                   <th>Prioridade</th>
                   <th>Referencia</th>
                 </tr>
