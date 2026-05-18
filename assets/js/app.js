@@ -216,7 +216,8 @@ function renderShell(content) {
 }
 
 function renderOverview() {
-  const rows = Object.entries(pages).map(([key, topic]) => {
+  const analyticsTopics = Object.entries(pages).filter(([key]) => key !== "certificados");
+  const rows = analyticsTopics.map(([key, topic]) => {
     const alerts = getTopicAlerts(key);
     const status = topicStatus(alerts);
     const pending = alerts.filter((item) => item.severity !== "low").length;
@@ -227,10 +228,6 @@ function renderOverview() {
         <td><span class="status-tag ${status.className}">${status.label}</span></td>
         <td>${pending}</td>
         <td>${topic.source}</td>
-        <td class="actions-cell">
-          <a class="action secondary" href="${normalizeLink(`${key}/`)}">ABRIR</a>
-          <a class="action muted" href="${normalizeLink(`${key}/`)}" target="_blank" rel="noopener">NOVA JANELA</a>
-        </td>
       </tr>
     `;
   }).join("");
@@ -259,7 +256,6 @@ function renderOverview() {
                   <th>Status</th>
                   <th>Pendencias</th>
                   <th>Origem</th>
-                  <th>Operacoes</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
