@@ -447,6 +447,17 @@ input {
   color: #111111;
 }
 
+.non-business-day td small,
+.non-business-day td strong {
+  color: #111111;
+}
+
+:root[data-theme="dark"] .non-business-day td,
+:root[data-theme="dark"] .non-business-day td small,
+:root[data-theme="dark"] .non-business-day td strong {
+  color: #0d1822;
+}
+
 .status-tag {
   display: inline-flex;
   width: fit-content;
@@ -512,7 +523,7 @@ input {
 
 .action.muted {
   background: #edf2f7;
-  color: var(--text);
+  color: #25313d;
 }
 
 .action.danger {
