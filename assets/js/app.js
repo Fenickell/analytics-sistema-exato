@@ -5,11 +5,10 @@ const pages = {
     tone: "warning",
     source: "PowerBI / integracao futura",
     alerts: [
-      { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", time: "08:12", lastBackup: "16/05/2026 23:40" },
-      { client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", time: "08:37", lastBackup: "18/05/2026 02:18" },
-      { client: "REAL PARIS", status: "OK", severity: "low", detail: "Ultimo backup confirmado com sucesso.", time: "07:55", lastBackup: "18/05/2026 01:05" },
-      { client: "FORTALEZA", status: "Pendente", severity: "medium", detail: "Aguardando confirmacao do arquivo final.", time: "09:04", lastBackup: "17/05/2026 22:56" },
-      { client: "GESAN", status: "OK", severity: "low", detail: "Rotina concluida dentro do horario.", time: "07:42", lastBackup: "18/05/2026 00:42" }
+      { client: "AFC AUTOMATICOS", status: "Pendente", severity: "high", detail: "Backup nao localizado na rotina da madrugada.", lastBackup: "16/05/2026 23:40", observation: "Verificar rotina no servidor do cliente e confirmar arquivo final." },
+      { client: "UNIFRANCE", status: "Em revisao", severity: "medium", detail: "Backup gerado com atraso e aguardando conferencia.", lastBackup: "18/05/2026 02:18", observation: "Analista validando se o atraso afetou a integridade do backup." },
+      { client: "FORTALEZA", status: "Pendente", severity: "high", detail: "Aguardando confirmacao do arquivo final.", lastBackup: "17/05/2026 22:56", observation: "Cobrar retorno do cliente e revisar pasta de destino." },
+      { client: "CHAMA PLANTAS", status: "Em revisao", severity: "medium", detail: "Arquivo encontrado, mas ainda sem confirmacao de conclusao.", lastBackup: "18/05/2026 03:12", observation: "Conferir tamanho do arquivo antes de baixar a pendencia." }
     ]
   },
   pmlsync: {
@@ -269,8 +268,13 @@ function renderBackupsPage(topic) {
       <td><strong>${item.client}</strong><small>${item.detail}</small></td>
       <td><span class="status-tag ${item.severity}">${item.status}</span></td>
       <td>${item.lastBackup}</td>
-      <td>${severityLabel(item.severity)}</td>
-      <td>${item.time}</td>
+      <td>${item.observation}</td>
+      <td>
+        <select class="status-select" aria-label="Alterar status de ${item.client}">
+          <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>
+          <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
+        </select>
+      </td>
     </tr>
   `).join("");
 
@@ -297,8 +301,8 @@ function renderBackupsPage(topic) {
                   <th>Cliente</th>
                   <th>Status</th>
                   <th>Data do ultimo backup feito</th>
-                  <th>Prioridade</th>
-                  <th>Referencia</th>
+                  <th>Observacao</th>
+                  <th>Alterar status</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>

@@ -439,8 +439,8 @@ input {
 .backup-table th:nth-child(1) { width: 330px; }
 .backup-table th:nth-child(2) { width: 150px; }
 .backup-table th:nth-child(3) { width: 230px; }
-.backup-table th:nth-child(4) { width: 130px; }
-.backup-table th:nth-child(5) { width: 130px; }
+.backup-table th:nth-child(4) { width: 420px; }
+.backup-table th:nth-child(5) { width: 180px; }
 
 .non-business-day td {
   background: var(--danger-soft);
@@ -529,6 +529,25 @@ input {
 .action.danger {
   background: var(--danger);
   color: #ffffff;
+}
+
+.status-select {
+  width: 150px;
+  height: 35px;
+  border: 1px solid #b9c4cf;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #25313d;
+  cursor: pointer;
+  font-weight: 800;
+  outline: none;
+  padding: 0 10px;
+}
+
+:root[data-theme="dark"] .status-select {
+  border-color: #6f8395;
+  background: #162636;
+  color: #f2f7fb;
 }
 
 @media (max-width: 1180px) {
