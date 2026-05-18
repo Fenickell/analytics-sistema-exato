@@ -309,15 +309,16 @@ function renderBackupsPage(topic) {
   const rows = queue.map((item) => `
     <tr class="${item.severity === "high" ? "non-business-day" : ""}">
       <td><strong>${escapeHtml(item.client)}</strong><small>${escapeHtml(item.detail)}</small></td>
-      <td><span class="status-tag ${item.severity}">${escapeHtml(item.status)}</span></td>
+      <td>
+        <select class="status-select status-select-${item.severity}" data-action="change-backup-status" data-id="${item.id}" aria-label="Alterar status de ${escapeHtml(item.client)}">
+          <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>
+          <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
+        </select>
+      </td>
       <td>${escapeHtml(item.lastBackup)}</td>
       <td>${escapeHtml(item.observation)}</td>
       <td class="operations backup-operations">
         <button type="button" class="action secondary" data-action="edit-backup-observation" data-id="${item.id}">EDITAR OBS.</button>
-        <select class="status-select" data-action="change-backup-status" data-id="${item.id}" aria-label="Alterar status de ${escapeHtml(item.client)}">
-          <option ${item.status === "Pendente" ? "selected" : ""}>Pendente</option>
-          <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
-        </select>
         <button type="button" class="action success" data-action="complete-backup" data-id="${item.id}">CONCLUIR</button>
       </td>
     </tr>
