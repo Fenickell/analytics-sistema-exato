@@ -117,10 +117,6 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function statusToSeverity(status) {
-  return status === "Falha nao solucionada" ? "high" : "medium";
-}
-
 function getBackupQueue() {
   const savedQueue = localStorage.getItem(backupStorageKey);
   const defaultQueue = structuredClone(pages.backups.alerts);
@@ -133,7 +129,6 @@ function getBackupQueue() {
     const saved = JSON.parse(savedQueue);
     const migrated = saved.map((item) => {
       const fallback = defaultQueue.find((entry) => entry.id === item.id) || {};
-      const status = item.status === "Pendente" ? "Falha nao solucionada" : item.status;
       const daysWithoutBackup = Number.isFinite(item.daysWithoutBackup)
         ? item.daysWithoutBackup
         : fallback.daysWithoutBackup || 0;
@@ -141,9 +136,7 @@ function getBackupQueue() {
       return {
         ...fallback,
         ...item,
-        status,
-        daysWithoutBackup,
-        severity: statusToSeverity(status)
+        daysWithoutBackup
       };
     });
 
@@ -328,23 +321,16 @@ function renderBackupsPage(topic) {
   const rows = queue.map((item) => `
     <tr class="${item.daysWithoutBackup > 1 ? "non-business-day" : ""}">
       <td><strong>${escapeHtml(item.client)}</strong><small>${escapeHtml(item.detail)}</small></td>
-      <td>
-        <select class="status-select status-select-${item.severity}" data-action="change-backup-status" data-id="${item.id}" aria-label="Alterar status de ${escapeHtml(item.client)}">
-          <option ${item.status === "Falha nao solucionada" ? "selected" : ""}>Falha nao solucionada</option>
-          <option ${item.status === "Em revisao" ? "selected" : ""}>Em revisao</option>
-        </select>
-      </td>
       <td>${escapeHtml(item.lastBackup)}</td>
       <td>${escapeHtml(item.daysWithoutBackup)}</td>
       <td>${escapeHtml(item.observation)}</td>
       <td class="operations backup-operations">
         <button type="button" class="action secondary" data-action="edit-backup-observation" data-id="${item.id}">EDITAR OBS.</button>
-        <button type="button" class="action success" data-action="complete-backup" data-id="${item.id}">CONCLUIR</button>
       </td>
     </tr>
   `).join("") || `
     <tr>
-      <td colspan="6" class="empty-state">Nenhum backup pendente para acompanhar.</td>
+      <td colspan="5" class="empty-state">Nenhum backup pendente para acompanhar.</td>
     </tr>
   `;
 
@@ -370,7 +356,6 @@ function renderBackupsPage(topic) {
               <thead>
                 <tr>
                   <th>Cliente</th>
-                  <th>Status</th>
                   <th>Data do ultimo backup feito</th>
                   <th>Dias sem Backup</th>
                   <th>Observacao</th>
@@ -502,22 +487,6 @@ function updateBackupObservation(id) {
   renderApp();
 }
 
-function changeBackupStatus(id, status) {
-  const queue = getBackupQueue().map((item) => {
-    if (item.id !== id) return item;
-    return { ...item, status, severity: statusToSeverity(status) };
-  });
-
-  saveBackupQueue(queue);
-  renderApp();
-}
-
-function completeBackup(id) {
-  const queue = getBackupQueue().filter((item) => item.id !== id);
-  saveBackupQueue(queue);
-  renderApp();
-}
-
 function bootInteractions() {
   document.addEventListener("click", (event) => {
     const target = event.target.closest("[data-action]");
@@ -529,16 +498,9 @@ function bootInteractions() {
     if (action === "edit-backup-observation") openBackupObservationModal(id);
     if (action === "close-modal") closeModal();
     if (action === "save-backup-observation") updateBackupObservation(id);
-    if (action === "complete-backup") completeBackup(id);
     if (action === "reset-backups") {
       resetBackupQueue();
       renderApp();
-    }
-  });
-
-  document.addEventListener("change", (event) => {
-    if (event.target.dataset.action === "change-backup-status") {
-      changeBackupStatus(event.target.dataset.id, event.target.value);
     }
   });
 }
