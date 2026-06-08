@@ -487,6 +487,66 @@ input {
   color: var(--muted);
 }
 
+.observation-edit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.observation-text {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.icon-action {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cfd9e3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--blue-strong);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.16);
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.icon-action:hover {
+  transform: translateY(-1px);
+  border-color: var(--blue-strong);
+  background: #eef7ff;
+}
+
+.icon-action:focus-visible {
+  outline: 3px solid rgba(8, 120, 209, 0.24);
+  outline-offset: 2px;
+}
+
+.icon-action svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+:root[data-theme="dark"] .icon-action {
+  border-color: #526b80;
+  background: #172637;
+  color: #8fd0ff;
+}
+
+:root[data-theme="dark"] .icon-action:hover {
+  border-color: #8fd0ff;
+  background: #21364a;
+}
+
 .certificate-table {
   min-width: 1580px;
 }
