@@ -492,14 +492,13 @@ input {
 }
 
 .overview-table {
-  min-width: 1280px;
+  min-width: 1080px;
 }
 
-.overview-table th:nth-child(1) { width: 300px; }
+.overview-table th:nth-child(1) { width: 360px; }
 .overview-table th:nth-child(2) { width: 170px; }
 .overview-table th:nth-child(3) { width: 120px; }
-.overview-table th:nth-child(4) { width: 250px; }
-.overview-table th:nth-child(5) { width: 430px; }
+.overview-table th:nth-child(4) { width: 430px; }
 
 .certificate-table th:nth-child(1) { width: 135px; }
 .certificate-table th:nth-child(2) { width: 180px; }

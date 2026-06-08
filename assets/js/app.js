@@ -231,7 +231,6 @@ function renderOverview() {
         <td><strong>${topic.title}</strong><small>${topic.description}</small></td>
         <td><span class="status-tag ${status.className}">${status.label}</span></td>
         <td>${pending}</td>
-        <td>${topic.source}</td>
         <td>${topic.overviewObservation}</td>
       </tr>
     `;
@@ -260,7 +259,6 @@ function renderOverview() {
                   <th>Topico</th>
                   <th>Status</th>
                   <th>Pendencias</th>
-                  <th>Origem</th>
                   <th>Observacoes</th>
                 </tr>
               </thead>
