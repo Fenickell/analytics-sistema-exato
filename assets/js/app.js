@@ -265,7 +265,6 @@ function renderOverview() {
     return `
       <tr class="${status.className === "danger" ? "non-business-day" : ""}">
         <td><strong>${topic.title}</strong><small>${topic.description}</small></td>
-        <td><span class="status-tag ${status.className}">${status.label}</span></td>
         <td>${pending}</td>
         <td>
           <div class="observation-edit">
@@ -300,7 +299,6 @@ function renderOverview() {
               <thead>
                 <tr>
                   <th>Topico</th>
-                  <th>Status</th>
                   <th>Pendencias</th>
                   <th>Observacoes</th>
                 </tr>

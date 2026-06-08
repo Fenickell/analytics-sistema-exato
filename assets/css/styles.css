@@ -552,13 +552,12 @@ input {
 }
 
 .overview-table {
-  min-width: 1080px;
+  min-width: 980px;
 }
 
-.overview-table th:nth-child(1) { width: 360px; }
-.overview-table th:nth-child(2) { width: 170px; }
-.overview-table th:nth-child(3) { width: 120px; }
-.overview-table th:nth-child(4) { width: 430px; }
+.overview-table th:nth-child(1) { width: 390px; }
+.overview-table th:nth-child(2) { width: 140px; }
+.overview-table th:nth-child(3) { width: 450px; }
 
 .certificate-table th:nth-child(1) { width: 135px; }
 .certificate-table th:nth-child(2) { width: 180px; }
