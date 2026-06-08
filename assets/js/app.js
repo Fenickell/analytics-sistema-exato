@@ -2,6 +2,7 @@ const pages = {
   backups: {
     title: "Backups de clientes",
     description: "Acompanhamento de clientes com backup concluido, pendente ou exigindo revisao.",
+    overviewObservation: "Clientes com mais de 1 dia sem backup devem ser tratados primeiro.",
     tone: "warning",
     source: "PowerBI / integracao futura",
     alerts: [
@@ -14,6 +15,7 @@ const pages = {
   pmlsync: {
     title: "PmlSync",
     description: "Visao diaria dos sincronizadores que precisam rodar sem interrupcao nos clientes.",
+    overviewObservation: "Validar alertas recebidos por e-mail e confirmar execucao diaria.",
     tone: "success",
     source: "Alerta de e-mail Outlook",
     alerts: [
@@ -26,6 +28,7 @@ const pages = {
   "mercado-livre": {
     title: "Mercado Livre",
     description: "Monitoramento de falhas de integracao com pedidos, anuncios ou marketplace.",
+    overviewObservation: "Falhas de integracao precisam ser acompanhadas ate normalizar pedidos.",
     tone: "danger",
     source: "Alerta de e-mail Outlook",
     alerts: [
@@ -38,6 +41,7 @@ const pages = {
   transferencias: {
     title: "Transferencias pendentes",
     description: "Fila de transferencias que precisam ser acompanhadas pela equipe.",
+    overviewObservation: "Acompanhar clientes com transferencia parada e registrar retorno.",
     tone: "warning",
     source: "Alerta de e-mail Outlook",
     alerts: [
@@ -228,6 +232,7 @@ function renderOverview() {
         <td><span class="status-tag ${status.className}">${status.label}</span></td>
         <td>${pending}</td>
         <td>${topic.source}</td>
+        <td>${topic.overviewObservation}</td>
       </tr>
     `;
   }).join("");
@@ -249,13 +254,14 @@ function renderOverview() {
         <div class="table-card">
           <div class="table-accent"></div>
           <div class="table-wrap">
-            <table class="admin-table">
+            <table class="admin-table overview-table">
               <thead>
                 <tr>
                   <th>Topico</th>
                   <th>Status</th>
                   <th>Pendencias</th>
                   <th>Origem</th>
+                  <th>Observacoes</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
