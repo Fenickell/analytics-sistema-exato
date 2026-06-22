@@ -19,10 +19,10 @@ const pages = {
     tone: "success",
     source: "Alerta de e-mail Outlook",
     alerts: [
-      { client: "CHAMA PLANTAS", status: "Sem execucao", severity: "high", detail: "Alerta recebido indicando que o sincronizador nao rodou hoje.", time: "08:21" },
+      { client: "CHAMA PLANTAS", status: "OK", severity: "low", detail: "Sincronizador validado e executado corretamente no exemplo visual.", time: "08:21" },
       { client: "AFC AUTOMATICOS", status: "OK", severity: "low", detail: "Sincronizacao diaria confirmada.", time: "07:50" },
       { client: "UNIFRANCE", status: "OK", severity: "low", detail: "Processo executado sem erro.", time: "08:03" },
-      { client: "NOVA ROTA", status: "Aguardando", severity: "medium", detail: "Sem evento conclusivo no exemplo da V1.", time: "09:10" }
+      { client: "NOVA ROTA", status: "OK", severity: "low", detail: "Execucao confirmada e sem pendencias no exemplo visual.", time: "09:10" }
     ]
   },
   "mercado-livre": {
