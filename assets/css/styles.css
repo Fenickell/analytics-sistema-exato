@@ -16,6 +16,7 @@
   --danger-soft: #ff787f;
   --warning: #b7791f;
   --success: #198754;
+  --success-soft: #9ee0ba;
   --radius: 12px;
   --radius-sm: 8px;
   --shadow: 0 1px 2px rgba(16, 24, 40, 0.08), 0 12px 28px rgba(16, 24, 40, 0.10);
@@ -477,6 +478,10 @@ input {
   background: #ff8b8f;
 }
 
+.admin-table tbody tr.solved-row:hover td {
+  background: #afe7c7;
+}
+
 .admin-table td strong,
 .admin-table td small {
   display: block;
@@ -487,77 +492,16 @@ input {
   color: var(--muted);
 }
 
-.observation-edit {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.observation-text {
-  min-width: 0;
-  line-height: 1.35;
-}
-
-.icon-action {
-  display: inline-flex;
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #cfd9e3;
-  border-radius: 10px;
-  background: #ffffff;
-  color: var(--blue-strong);
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.16);
-  cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
-}
-
-.icon-action:hover {
-  transform: translateY(-1px);
-  border-color: var(--blue-strong);
-  background: #eef7ff;
-}
-
-.icon-action:focus-visible {
-  outline: 3px solid rgba(8, 120, 209, 0.24);
-  outline-offset: 2px;
-}
-
-.icon-action svg {
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
-:root[data-theme="dark"] .icon-action {
-  border-color: #526b80;
-  background: #172637;
-  color: #8fd0ff;
-}
-
-:root[data-theme="dark"] .icon-action:hover {
-  border-color: #8fd0ff;
-  background: #21364a;
-}
-
 .certificate-table {
   min-width: 1580px;
 }
 
 .overview-table {
-  min-width: 980px;
+  min-width: 620px;
 }
 
-.overview-table th:nth-child(1) { width: 390px; }
+.overview-table th:nth-child(1) { width: 480px; }
 .overview-table th:nth-child(2) { width: 140px; }
-.overview-table th:nth-child(3) { width: 450px; }
 
 .certificate-table th:nth-child(1) { width: 135px; }
 .certificate-table th:nth-child(2) { width: 180px; }
@@ -595,6 +539,22 @@ input {
   color: #0d1822;
 }
 
+.solved-row td {
+  background: var(--success-soft);
+  color: #102617;
+}
+
+.solved-row td small,
+.solved-row td strong {
+  color: #102617;
+}
+
+:root[data-theme="dark"] .solved-row td,
+:root[data-theme="dark"] .solved-row td small,
+:root[data-theme="dark"] .solved-row td strong {
+  color: #0d1822;
+}
+
 .status-tag {
   display: inline-flex;
   width: fit-content;
@@ -608,6 +568,10 @@ input {
 .status-tag.success {
   background: #e7f6ee;
   color: var(--success);
+}
+
+.legend-square-success {
+  background: var(--success-soft);
 }
 
 .status-tag.warning {

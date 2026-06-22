@@ -102,7 +102,6 @@ const pageKey = document.body.dataset.page || "overview";
 const isNested = pageKey !== "overview";
 const basePath = isNested ? "../" : "";
 const backupStorageKey = "analytics-sistema-exato:backup-queue";
-const overviewObservationStorageKey = "analytics-sistema-exato:overview-observations";
 
 function normalizeLink(path) {
   if (path === "./") return basePath || "./";
@@ -160,30 +159,6 @@ function resetBackupQueue() {
   localStorage.removeItem(backupStorageKey);
 }
 
-function getOverviewObservationMap() {
-  const saved = localStorage.getItem(overviewObservationStorageKey);
-
-  if (!saved) {
-    return {};
-  }
-
-  try {
-    return JSON.parse(saved);
-  } catch {
-    return {};
-  }
-}
-
-function getOverviewObservation(key) {
-  return getOverviewObservationMap()[key] || pages[key].overviewObservation;
-}
-
-function saveOverviewObservation(key, observation) {
-  const observations = getOverviewObservationMap();
-  observations[key] = observation;
-  localStorage.setItem(overviewObservationStorageKey, JSON.stringify(observations));
-}
-
 function getTopicAlerts(key) {
   if (key === "backups") return getBackupQueue();
   return pages[key].alerts;
@@ -196,16 +171,6 @@ function topicStatus(alerts) {
   if (high > 0) return { label: "Atencao critica", className: "danger" };
   if (medium > 0) return { label: "Acompanhar", className: "warning" };
   return { label: "Operacao normal", className: "success" };
-}
-
-function renderPencilIcon() {
-  return `
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M15.2 5.4l3.4 3.4"></path>
-      <path d="M4.8 16.9l-.8 3.3 3.3-.8 11-11a2.4 2.4 0 0 0-3.4-3.4l-11 11z"></path>
-      <path d="M13.9 6.7l3.4 3.4"></path>
-    </svg>
-  `;
 }
 
 function renderSidebar() {
@@ -260,20 +225,12 @@ function renderOverview() {
     const alerts = getTopicAlerts(key);
     const status = topicStatus(alerts);
     const pending = alerts.filter((item) => item.severity !== "low").length;
-    const observation = getOverviewObservation(key);
+    const rowClass = pending === 0 ? "solved-row" : status.className === "danger" ? "non-business-day" : "";
 
     return `
-      <tr class="${status.className === "danger" ? "non-business-day" : ""}">
+      <tr class="${rowClass}">
         <td><strong>${topic.title}</strong><small>${topic.description}</small></td>
         <td>${pending}</td>
-        <td>
-          <div class="observation-edit">
-            <span class="observation-text">${escapeHtml(observation)}</span>
-            <button type="button" class="icon-action" data-action="edit-overview-observation" data-id="${key}" aria-label="Editar observacao de ${escapeHtml(topic.title)}" title="Editar observacao">
-              ${renderPencilIcon()}
-            </button>
-          </div>
-        </td>
       </tr>
     `;
   }).join("");
@@ -290,6 +247,8 @@ function renderOverview() {
           <div class="toolbar-summary">
             <span class="legend-square"></span>
             Linha em vermelho: item critico para acompanhamento
+            <span class="legend-square legend-square-success"></span>
+            Linha em verde: topico solucionado
           </div>
         </div>
         <div class="table-card">
@@ -300,7 +259,6 @@ function renderOverview() {
                 <tr>
                   <th>Topico</th>
                   <th>Pendencias</th>
-                  <th>Observacoes</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
@@ -512,31 +470,6 @@ function openBackupObservationModal(id) {
   document.querySelector("#backup-observation-field").focus();
 }
 
-function openOverviewObservationModal(key) {
-  const topic = pages[key];
-  if (!topic) return;
-
-  document.querySelector("#modal-root").innerHTML = `
-    <div class="modal-backdrop" role="presentation">
-      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="overview-modal-title">
-        <header>
-          <h2 id="overview-modal-title">Editar observacao</h2>
-          <button type="button" class="modal-close" data-action="close-modal" aria-label="Fechar">X</button>
-        </header>
-        <div class="modal-body">
-          <span class="modal-client">${escapeHtml(topic.title)}</span>
-          <textarea class="modal-textarea" id="overview-observation-field">${escapeHtml(getOverviewObservation(key))}</textarea>
-        </div>
-        <footer>
-          <button type="button" class="action muted" data-action="close-modal">CANCELAR</button>
-          <button type="button" class="action primary" data-action="save-overview-observation" data-id="${key}">SALVAR</button>
-        </footer>
-      </section>
-    </div>
-  `;
-  document.querySelector("#overview-observation-field").focus();
-}
-
 function closeModal() {
   document.querySelector("#modal-root").innerHTML = "";
 }
@@ -553,13 +486,6 @@ function updateBackupObservation(id) {
   renderApp();
 }
 
-function updateOverviewObservation(key) {
-  const field = document.querySelector("#overview-observation-field");
-  saveOverviewObservation(key, field.value.trim() || "Sem observacao registrada");
-  closeModal();
-  renderApp();
-}
-
 function bootInteractions() {
   document.addEventListener("click", (event) => {
     const target = event.target.closest("[data-action]");
@@ -568,10 +494,8 @@ function bootInteractions() {
     const action = target.dataset.action;
     const id = target.dataset.id;
 
-    if (action === "edit-overview-observation") openOverviewObservationModal(id);
     if (action === "edit-backup-observation") openBackupObservationModal(id);
     if (action === "close-modal") closeModal();
-    if (action === "save-overview-observation") updateOverviewObservation(id);
     if (action === "save-backup-observation") updateBackupObservation(id);
     if (action === "reset-backups") {
       resetBackupQueue();
